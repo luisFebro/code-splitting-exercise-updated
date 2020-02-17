@@ -1,7 +1,7 @@
-import React, { Component, Suspense } from 'react';
+import React, { Component, Suspense, Fragment } from 'react';
 import loadable from '@loadable/component'
 import './App.css';
-
+import DemoLoadingLibrary from './Components/DemoLoadingLibrary';
 import Page1 from './Components/Page1';
 // Part 1 - No Code Splitting
 // import Page2 from './Components/Page2';
@@ -15,8 +15,15 @@ import Page1 from './Components/Page1';
 // const Page3Lazy = React.lazy(() => import('./Components/Page3'));
 
 // Part 5 - Loadable Components
-const LoadablePage2Lazy = loadable(() => import("./Components/Page2"))
-const LoadablePage3Lazy = loadable(() => import("./Components/Page3"))
+const options = {
+    fallback: <div
+                style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '5rem'}}
+                >
+                    <p>Loading...</p>
+                </div>
+}
+const LoadablePage2Lazy = loadable(() => import("./Components/Page2"), options)
+const LoadablePage3Lazy = loadable(() => import("./Components/Page3"), options)
 
 class App extends Component {
   constructor() {
@@ -97,7 +104,12 @@ class App extends Component {
 
     // Part 5 = loadable Components lib (this lib is complete for server-rendering solution)
     if (this.state.route === 'page1') {
-        return <Page1 onRouteChange={this.onRouteChange} />
+        return (
+            <Fragment>
+                <Page1 onRouteChange={this.onRouteChange} />
+                <DemoLoadingLibrary />
+            </Fragment>
+        )
     } else if (this.state.route === 'page2') {
         return <LoadablePage2Lazy onRouteChange={this.onRouteChange} />
     } else {
