@@ -1,4 +1,5 @@
 import React, { Component, Suspense } from 'react';
+import loadable from '@loadable/component'
 import './App.css';
 
 import Page1 from './Components/Page1';
@@ -10,8 +11,12 @@ import Page1 from './Components/Page1';
 // import AsyncComponent from './AsyncComponent';
 
 // Part 4 - React.lazy
-const Page2Lazy = React.lazy(() => import('./Components/Page2'));
-const Page3Lazy = React.lazy(() => import('./Components/Page3'));
+// const Page2Lazy = React.lazy(() => import('./Components/Page2'));
+// const Page3Lazy = React.lazy(() => import('./Components/Page3'));
+
+// Part 5 - Loadable Components
+const LoadablePage2Lazy = loadable(() => import("./Components/Page2"))
+const LoadablePage3Lazy = loadable(() => import("./Components/Page3"))
 
 class App extends Component {
   constructor() {
@@ -74,20 +79,29 @@ class App extends Component {
     // }
 
     // Part 4 - React.Lazy
+    // if (this.state.route === 'page1') {
+    //   return <Page1 onRouteChange={this.onRouteChange} />
+    // } else if (this.state.route === 'page2') {
+    //   return (
+    //     <Suspense fallback={<div>Loading...</div>}>
+    //       <Page2Lazy onRouteChange={this.onRouteChange} />
+    //     </Suspense>
+    //   );
+    // } else {
+    //   return (
+    //     <Suspense fallback={<div>Loading...</div>}>
+    //       <Page3Lazy onRouteChange={this.onRouteChange} />
+    //     </Suspense>
+    //   );
+    // }
+
+    // Part 5 = loadable Components lib (this lib is complete for server-rendering solution)
     if (this.state.route === 'page1') {
-      return <Page1 onRouteChange={this.onRouteChange} />
+        return <Page1 onRouteChange={this.onRouteChange} />
     } else if (this.state.route === 'page2') {
-      return (
-        <Suspense fallback={<div>Loading...</div>}>
-          <Page2Lazy onRouteChange={this.onRouteChange} />
-        </Suspense>
-      );
+        return <LoadablePage2Lazy onRouteChange={this.onRouteChange} />
     } else {
-      return (
-        <Suspense fallback={<div>Loading...</div>}>
-          <Page3Lazy onRouteChange={this.onRouteChange} />
-        </Suspense>
-      );
+        return <LoadablePage3Lazy onRouteChange={this.onRouteChange} />
     }
 
   }
